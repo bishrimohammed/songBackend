@@ -20,11 +20,11 @@ mongoose
   .then(() => console.log("connected DB"));
 app.use(
   cors({
-    origin: ["http://localhost:3005", "http://localhost:5173"],
+    origin: ["https://songfrontend.onrender.com"],
   })
 );
 app.use(express.json());
 app.use("/song", songRouter);
-app.listen(3001, () => {
+app.listen(4000, () => {
   console.log("jvhg");
 });

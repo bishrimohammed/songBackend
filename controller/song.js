@@ -1,4 +1,5 @@
 import Song from "../model/Song.js";
+import { faker } from "@faker-js/faker";
 /*const sampleData = [
   {
     title: "Uncharted Dreams",
@@ -845,25 +846,7 @@ export const createSong = async (req, res) => {
     genre: req.body.genre,
   });
   const SongsData = await songs.save();
-  /* Song.insertMany(sampleData)
-    .then(() => {
-      console.log("Sample data inserted successfully.");
 
-      // Retrieve the inserted data from the database and return it
-      Song.find({}, (err, data) => {
-        if (err) {
-          console.error("Error retrieving data:", err);
-        } else {
-          console.log("Sample data retrieved successfully.");
-          console.log(data); // Return the data as an array
-        }
-
-        mongoose.connection.close(); // Close the connection when done.
-      });
-    })
-    .catch((error) => {
-      console.error("Error inserting sample data:", error);
-    });*/
   res.status(200).json(SongsData);
 };
 
@@ -871,7 +854,7 @@ export const getSongs = async (req, res) => {
   const Songdata = await Song.find()
     .sort({ createdAt: -1 })
     .select({ title: 1, artist: 1, genre: 1, album: 1 });
-  console.log(Songdata);
+  //console.log(Songdata);
   res.status(200).json(Songdata);
 };
 export const FilterSongs = async (req, res) => {
@@ -982,4 +965,53 @@ export const songStatistics = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+export const generateRandomSong = async () => {
+  const sampleData = [];
+
+  // Generate 100 sample records
+  for (let i = 1; i <= 100; i++) {
+    const artist = faker.person.fullName();
+    const numAlbums = Math.floor(Math.random() * 5) + 1; // Random number of albums between 1 and 5
+
+    for (let j = 1; j <= numAlbums; j++) {
+      const album = faker.lorem.words(2); // Generate a random album name with two words
+
+      // Randomly select a genre
+
+      // Generate a random number of songs between 6 and 12
+      const numSongs = Math.floor(Math.random() * 7) + 6;
+
+      for (let k = 1; k <= numSongs; k++) {
+        const genre = faker.music.genre();
+        const title = faker.music.songName(); // Generate a random song title with three words
+        sampleData.push({ title, album, artist, genre });
+      }
+    }
+  }
+
+  // Return the generated data as an array
+  //console.log(sampleData);
+
+  Song.insertMany(sampleData)
+    .then(() => {
+      console.log("Sample data inserted successfully.");
+
+      // Retrieve the inserted data from the database and return it
+      Song.find({}, (err, data) => {
+        if (err) {
+          console.error("Error retrieving data:", err);
+        } else {
+          console.log("Sample data retrieved successfully.");
+          console.log(data); // Return the data as an array
+          res.status(200).json(data);
+        }
+
+        mongoose.connection.close(); // Close the connection when done.
+      });
+    })
+    .catch((error) => {
+      console.error("Error inserting sample data:", error);
+    });
 };
