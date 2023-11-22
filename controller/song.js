@@ -853,6 +853,7 @@ export const createSong = async (req, res) => {
 export const getSongs = async (req, res) => {
   const Songdata = await Song.find()
     .sort({ createdAt: -1 })
+    .limit(50)
     .select({ title: 1, artist: 1, genre: 1, album: 1 });
   //console.log(Songdata);
   res.status(200).json(Songdata);
